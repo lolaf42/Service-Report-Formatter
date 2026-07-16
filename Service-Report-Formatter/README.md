@@ -1,16 +1,16 @@
 # Service-Report-Formatter
 
-Eine Python-CLI, die formlose Arbeitsnotizen eines freiberuflichen Mechatronik-Technikers
-(BESS-Inbetriebnahme, MSR, Automatisierung, Fehleranalyse, DGUV V3) in einen
-rechnungsfähigen Service-Report umwandelt. Die Umwandlung läuft über die Anthropic-API
-(Claude), weil der Input unstrukturiert ist und nicht mit festen Regeln (Regex) erfasst
-werden kann.
+Ein Werkzeug, das formlose Arbeitsnotizen aus Serviceeinsätzen in einen
+rechnungsfähigen Service-Report umwandelt. Die Umwandlung läuft über die
+Anthropic-API (Claude), weil der Input unstrukturiert ist und nicht mit festen
+Regeln (Regex) erfasst werden kann. Nutzbar wahlweise über die Kommandozeile
+(CLI) oder eine grafische Oberfläche (GUI).
 
 ## Was das Tool tut
 
 1. Liest formlose Notizen (Stichpunkte, Fließtext, gemischte Datumsformate).
 2. Schickt sie an Claude und erhält eine **strukturierte JSON-Zwischenrepräsentation** zurück.
-3. Python löst offene Jahresangaben auf, validiert Datumswerte, sortiert chronologisch
+3. Löst offene Jahresangaben auf, validiert Datumswerte, sortiert chronologisch
    und rendert einen sauberen Textblock – gegliedert nach Datum, jeder Tagesblock
    eigenständig kopierbar.
 
@@ -22,6 +22,7 @@ Rechnungs- und Kundennummer stehen ausschließlich in der Konfiguration und werd
 | Datei | Aufgabe |
 |-------|---------|
 | `report.py` | CLI-Einstiegspunkt: argparse, Ein-/Ausgabe, Flag-Validierung |
+| `gui.py` | Grafische Oberfläche (Tkinter) |
 | `config.py` | Config laden, validieren, CLI-Overrides anwenden |
 | `extractor.py` | API-Request bauen, Anthropic aufrufen, JSON robust parsen |
 | `renderer.py` | JSON + Config → finaler Textblock (ohne Netzwerk testbar) |
@@ -29,6 +30,9 @@ Rechnungs- und Kundennummer stehen ausschließlich in der Konfiguration und werd
 | `config.toml.example` | Beispielkonfiguration |
 | `examples/` | Beispiel-Notizen und erwartete Ausgabe |
 | `tests/` | Tests (Rendering, Jahresauflösung, Flag-Kombinationen, …) |
+| `launch-gui.sh` | Startskript der GUI (mit Fehler-Log) |
+| `install-app.sh` | Installiert das Tool als Desktop-Anwendung (Linux/GNOME) |
+| `service-report-formatter.desktop` | Vorlage für den Desktop-Eintrag |
 | `.vscode/launch.json` | VS-Code-Debug-Konfiguration (dry-run) |
 
 ## Installation
@@ -73,7 +77,7 @@ model = "claude-sonnet-4-6"
 Fehlt ein Pflichtwert, bricht das Programm mit einer klaren Meldung ab und nennt den
 fehlenden Schlüssel (kein stiller Default).
 
-## Verwendung
+## Verwendung (CLI)
 
 ```bash
 # Aus Datei, Ausgabe in Datei
@@ -99,6 +103,18 @@ python report.py --input notes.txt \
   --model claude-sonnet-4-6
 ```
 
+### Weitere Flags
+
+| Flag | Wirkung |
+|------|---------|
+| `--dry-run` | Baut den Request zusammen und gibt ihn aus, ruft die API **nicht** auf |
+| `--save-json pfad.json` | Schreibt die geparste Modellantwort zusätzlich als JSON weg |
+| `--from-json pfad.json` | Überspringt den API-Call komplett und rendert aus der Datei |
+
+Unzulässige Flag-Kombinationen führen zu einem klaren Abbruch:
+`--from-json` zusammen mit `--input`, `--stdin`, `--save-json` oder `--dry-run`;
+sowie das Fehlen von `--input`, `--stdin` **und** `--from-json`.
+
 ## Grafische Oberfläche (GUI)
 
 Alternativ zur Kommandozeile gibt es eine einfache Fenster-Oberfläche (Tkinter):
@@ -112,24 +128,30 @@ Darin: Rechnungs-/Kundendaten und API-Key eingeben, Notizen tippen oder per
 zeigt den Request ohne API-Aufruf. Der API-Aufruf läuft im Hintergrund, damit das
 Fenster nicht einfriert.
 
-Tkinter ist in Python enthalten; auf manchen Ubuntu-Systemen muss einmalig das
+Tkinter ist in Python enthalten; auf manchen Linux-Systemen muss einmalig das
 Systempaket installiert werden:
 
 ```bash
 sudo apt install python3-tk
 ```
 
-### Weitere Flags
+## Als Desktop-Anwendung installieren (Linux/GNOME)
 
-| Flag | Wirkung |
-|------|---------|
-| `--dry-run` | Baut den Request zusammen und gibt ihn aus, ruft die API **nicht** auf |
-| `--save-json pfad.json` | Schreibt die geparste Modellantwort zusätzlich als JSON weg |
-| `--from-json pfad.json` | Überspringt den API-Call komplett und rendert aus der Datei |
+Damit das Tool wie eine normale App im Anwendungsmenü erscheint und per Klick
+gestartet werden kann:
 
-Unzulässige Flag-Kombinationen führen zu einem klaren Abbruch:
-`--from-json` zusammen mit `--input`, `--stdin`, `--save-json` oder `--dry-run`;
-sowie das Fehlen von `--input`, `--stdin` **und** `--from-json`.
+```bash
+./install-app.sh
+```
+
+Das Skript erzeugt den Menü-Eintrag mit den Pfaden des aktuellen Nutzers und
+aktualisiert die Menü-Datenbank. Anschließend die App über die Super-Taste und
+Eingabe von „Service" starten.
+
+> Hinweis (Ubuntu/GNOME): Neu installierte Einträge erscheinen manchmal erst nach
+> einem Ab- und Anmelden. Das direkte Doppelklicken der `.desktop`-Datei im
+> Dateimanager ist in aktuellen GNOME-Versionen deaktiviert – daher über das
+> Anwendungsmenü starten.
 
 ## Datums- und Monatsbehandlung
 

@@ -281,7 +281,8 @@ class App:
 
 
 def main():
-    root = tk.Tk()
+    # className setzt WM_CLASS -> Ubuntu ordnet Fenster dem .desktop-Eintrag/Icon zu
+    root = tk.Tk(className="ServiceReportFormatter")
     App(root)
     root.mainloop()
 
