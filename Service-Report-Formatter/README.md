@@ -1,7 +1,6 @@
 # Service-Report-Formatter
 
-Eine Python-CLI, die formlose Arbeitsnotizen eines freiberuflichen Mechatronik-Technikers
-(BESS-Inbetriebnahme, MSR, Automatisierung, Fehleranalyse, DGUV V3) in einen
+Eine Python-CLI, die formlose Arbeitsnotizen eines Technikers in einen
 rechnungsfähigen Service-Report umwandelt. Die Umwandlung läuft über die Anthropic-API
 (Claude), weil der Input unstrukturiert ist und nicht mit festen Regeln (Regex) erfasst
 werden kann.
