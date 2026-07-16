@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Service-Report-Formatter
+Comment=Arbeitsnotizen in rechnungsfähige Service-Reports umwandeln
+Exec=/home/paul/Service-Report-Formatter/.venv/bin/python /home/paul/Service-Report-Formatter/gui.py
+Path=/home/paul/Service-Report-Formatter
+Icon=x-office-document
+Terminal=false
+Categories=Office;
+StartupNotify=true
