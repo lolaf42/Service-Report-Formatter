@@ -1,0 +1,19 @@
+Rechnungsnummer: RE-2026-03-001
+Kundennummer: K-1042
+Kunde: Beispiel GmbH
+
+12.03.2026 — 8.0 h
+Inbetriebnahme des Wechselrichters durchgeführt, Kabeldose montiert.
+
+13.03.2026
+Messung des Übergangswiderstands durchgeführt; Messergebnisse innerhalb der erwarteten Grenzwerte.
+
+14.03.2026
+Sicherung ersetzt (defekte Sicherung identifiziert und ausgetauscht).
+
+Nicht zugeordnet:
+
+Fehler an der Steuerung: LED blinkt, MSR-Überprüfung erforderlich.
+
+Offene Punkte:
+- Kundendaten (Name) nicht in den Notizen vorhanden.

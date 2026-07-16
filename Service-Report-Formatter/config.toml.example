@@ -1,0 +1,10 @@
+[invoice]
+number = "RE-2026-03-001"
+customer_number = "K-1042"
+customer_name = "Beispiel GmbH"
+
+[dates]
+default_year = 2026
+
+[api]
+model = "claude-sonnet-4-6"
